@@ -14,17 +14,20 @@ app.use(express.json());
 // Route to get definitions of a word
 app.get("/api/search", (req, res) => {
   const term = req.query.term;
+
+  console.log("Received search term:", term);
+
   if (!term) {
     return res.status(400).send("Search term is required");
   }
 
-  // Access the 'entries' array to find the word
-  const result = dictionaryData.entries.find((item) => item.word.toLowerCase() === term.toLowerCase());
+  // Use `.filter()` to find all entries for the word
+  const results = dictionaryData.entries.filter((item) => item.word && item.word.toLowerCase() === term.toLowerCase());
 
-  if (result) {
+  if (results.length > 0) {
     // Add to popular terms list
     popularTerms.push(term);
-    res.json({ term: result.word, definition: result.definition });
+    res.json(results);
   } else {
     res.status(404).send("Term not found");
   }
