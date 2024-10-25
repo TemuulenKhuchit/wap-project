@@ -1,10 +1,10 @@
 import mysql from "mysql2/promise";
 
 const db = mysql.createPool({
-  host: "localhost",
-  user: "root",
+  host: "wap-english-dictionary.c1waysg2q137.eu-north-1.rds.amazonaws.com",
+  user: "admin",
   password: "Temuulen123$",
-  database: "entries",
+  database: "wap_english_dictionary",
   port: 3306,
 });
 
