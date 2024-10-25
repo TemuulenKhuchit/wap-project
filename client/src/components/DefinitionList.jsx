@@ -33,11 +33,15 @@ const DefinitionList = ({ searchTerm }) => {
 
   // Render loading, error, or the list of definitions
   if (loading) {
-    return <p className="text-gray-500 text-center">Loading definitions...</p>;
+    return <p className="text-gray-500 text-center">Loading definitions, please wait...</p>;
   }
 
   if (error) {
-    return <p className="text-red-500 text-center">Error: {error}</p>;
+    if (error === "Term not found") {
+      return <p className="text-gray-500 text-center">No definitions found for "{searchTerm}".</p>;
+    } else {
+      return <p className="text-red-500 text-center">Error: Something went wrong. Please try again later.</p>;
+    }
   }
 
   if (definitions.length === 0 && searchTerm) {

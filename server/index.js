@@ -1,43 +1,67 @@
 import express from "express";
 import cors from "cors";
-import dictionaryData from "./englishdictionary.json" assert { type: "json" };
+import mysql from "mysql2/promise";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-let popularTerms = [];
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Route to get definitions of a word
-app.get("/api/search", (req, res) => {
-  const term = req.query.term;
+// Create a connection pool to MySQL
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "Temuulen123$",
+  database: "entries",
+});
 
-  console.log("Received search term:", term);
+// Route to get definitions of a word
+app.get("/api/search", async (req, res) => {
+  const term = req.query.term;
 
   if (!term) {
     return res.status(400).send("Search term is required");
   }
 
-  // Use `.filter()` to find all entries for the word
-  const results = dictionaryData.entries.filter((item) => item.word && item.word.toLowerCase() === term.toLowerCase());
+  try {
+    // Fetch word definitions from MySQL database
+    const [results] = await db.query("SELECT * FROM entries WHERE word = ?", [term]);
 
-  if (results.length > 0) {
-    // Add to popular terms list
-    popularTerms.push(term);
-    res.json(results);
-  } else {
-    res.status(404).send("Term not found");
+    if (results.length > 0) {
+      // Add or update the popular term in the popular_terms table
+      const [existingTerm] = await db.query("SELECT * FROM popular_terms WHERE term = ?", [term]);
+
+      if (existingTerm.length > 0) {
+        await db.query("UPDATE popular_terms SET count = count + 1, last_searched = CURRENT_TIMESTAMP WHERE term = ?", [
+          term,
+        ]);
+      } else {
+        await db.query("INSERT INTO popular_terms (term) VALUES (?)", [term]);
+      }
+
+      res.json(results);
+    } else {
+      res.status(404).send("Term not found");
+    }
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
 // Route to get popular search terms
-app.get("/api/popular", (req, res) => {
-  // Get top 10 most popular search terms
-  const uniqueTerms = [...new Set(popularTerms)];
-  res.json(uniqueTerms.slice(0, 10));
+app.get("/api/popular", async (req, res) => {
+  try {
+    const [popularTerms] = await db.query(
+      "SELECT term, COUNT(term) AS count FROM popular_terms GROUP BY term ORDER BY count DESC LIMIT 10"
+    );
+    res.json(popularTerms.map((term) => term.term));
+  } catch (error) {
+    console.error("Database error:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // Start server
