@@ -6,13 +6,11 @@ const PopularTerms = () => {
   const [error, setError] = useState(null);
   const [counter, setCounter] = useState(25);
 
-  // Fetch popular terms every 25 seconds
   useEffect(() => {
     const fetchPopularTerms = () => {
       setLoading(true);
       setError(null);
 
-      // Placeholder for API call (replace this with actual API call later)
       fetch("http://localhost:5000/api/popular")
         .then((response) => {
           if (!response.ok) {
@@ -30,20 +28,16 @@ const PopularTerms = () => {
         });
     };
 
-    // Fetch terms initially
     fetchPopularTerms();
 
-    // Set an interval to fetch terms every 25 seconds
     const intervalId = setInterval(() => {
       fetchPopularTerms();
-      setCounter(25); // Reset the countdown timer after each refresh
+      setCounter(25);
     }, 25000);
 
-    // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
   }, []);
 
-  // Timer countdown effect
   useEffect(() => {
     if (counter > 0) {
       const timerId = setTimeout(() => setCounter(counter - 1), 1000);
@@ -51,7 +45,6 @@ const PopularTerms = () => {
     }
   }, [counter]);
 
-  // Render loading, error, or the list of popular terms
   if (loading) {
     return <p>Loading popular terms...</p>;
   }

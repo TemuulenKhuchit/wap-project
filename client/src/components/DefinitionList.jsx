@@ -5,7 +5,6 @@ const DefinitionList = ({ searchTerm }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch definitions when searchTerm changes
   useEffect(() => {
     if (searchTerm) {
       setLoading(true);
@@ -19,7 +18,7 @@ const DefinitionList = ({ searchTerm }) => {
           return response.json();
         })
         .then((data) => {
-          setDefinitions(data); // Set definitions as the entire array of matched definitions
+          setDefinitions(data);
           setLoading(false);
         })
         .catch((err) => {
@@ -31,7 +30,6 @@ const DefinitionList = ({ searchTerm }) => {
     }
   }, [searchTerm]);
 
-  // Render loading, error, or the list of definitions
   if (loading) {
     return <p className="text-gray-500 text-center">Loading definitions, please wait...</p>;
   }

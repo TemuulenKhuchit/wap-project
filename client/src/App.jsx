@@ -7,7 +7,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = (term) => {
-    console.log(`Searching for the term: ${term}`); // Debugging statement
+    console.log(`Searching for the term: ${term}`);
     setSearchTerm(term);
   };
 
