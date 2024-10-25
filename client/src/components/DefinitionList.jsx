@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 
-const DefinitionList = ({ searchTerm }) => {
+const DefinitionList = ({ searchWord }) => {
   const [definitions, setDefinitions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (searchTerm) {
+    if (searchWord) {
       setLoading(true);
       setError(null);
 
-      fetch(`http://localhost:5000/api/search?term=${searchTerm}`)
+      fetch(`http://localhost:5000/api/search?word=${searchWord}`)
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Term not found");
+            throw new Error("Word not found!");
           }
           return response.json();
         })
@@ -28,27 +28,27 @@ const DefinitionList = ({ searchTerm }) => {
     } else {
       setDefinitions([]);
     }
-  }, [searchTerm]);
+  }, [searchWord]);
 
   if (loading) {
     return <p className="text-gray-500 text-center">Loading definitions, please wait...</p>;
   }
 
   if (error) {
-    if (error === "Term not found") {
-      return <p className="text-gray-500 text-center">No definitions found for "{searchTerm}".</p>;
+    if (error === "Word not found!") {
+      return <p className="text-gray-500 text-center">No definitions found for "{searchWord}".</p>;
     } else {
-      return <p className="text-red-500 text-center">Error: Something went wrong. Please try again later.</p>;
+      return <p className="text-red-500 text-center">Error: Something went wrong! Please try again later.</p>;
     }
   }
 
-  if (definitions.length === 0 && searchTerm) {
+  if (definitions.length === 0 && searchWord) {
     return <p className="text-gray-500 text-center">No definitions found.</p>;
   }
 
   return (
     <div className="mt-6 p-4 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">Definitions for "{searchTerm}":</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">Definitions for "{searchWord}":</h2>
       <ul className="list-disc list-inside">
         {definitions.map((item, index) => (
           <li key={index} className="text-lg text-gray-700">

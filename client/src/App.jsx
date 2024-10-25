@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import SearchForm from "./components/SearchForm";
 import DefinitionList from "./components/DefinitionList";
-import PopularTerms from "./components/PopularTerms";
+import PopularWords from "./components/PopularWords";
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchWord, setSearchWord] = useState("");
 
-  const handleSearch = (term) => {
-    console.log(`Searching for the term: ${term}`);
-    setSearchTerm(term);
+  const handleSearch = (searchWord) => {
+    console.log(`Searching for the word: ${searchWord}`);
+    setSearchWord(searchWord);
   };
 
   return (
@@ -18,8 +18,8 @@ function App() {
       </header>
       <main className="container mx-auto p-4">
         <SearchForm onSearch={handleSearch} />
-        <DefinitionList searchTerm={searchTerm} />
-        <PopularTerms />
+        <DefinitionList searchWord={searchWord} />
+        <PopularWords />
       </main>
     </div>
   );

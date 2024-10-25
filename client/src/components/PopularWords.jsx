@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 
-const PopularTerms = () => {
-  const [popularTerms, setPopularTerms] = useState([]);
+const PopularWords = () => {
+  const [popularWords, setPopularWords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [counter, setCounter] = useState(25);
 
   useEffect(() => {
-    const fetchPopularTerms = () => {
+    const fetchPopularWords = () => {
       setLoading(true);
       setError(null);
 
       fetch("http://localhost:5000/api/popular")
         .then((response) => {
           if (!response.ok) {
-            throw new Error("Failed to fetch popular terms");
+            throw new Error("Failed to fetch popular words!");
           }
           return response.json();
         })
         .then((data) => {
-          setPopularTerms(data);
+          setPopularWords(data);
           setLoading(false);
         })
         .catch((err) => {
@@ -28,10 +28,10 @@ const PopularTerms = () => {
         });
     };
 
-    fetchPopularTerms();
+    fetchPopularWords();
 
     const intervalId = setInterval(() => {
-      fetchPopularTerms();
+      fetchPopularWords();
       setCounter(25);
     }, 25000);
 
@@ -46,7 +46,7 @@ const PopularTerms = () => {
   }, [counter]);
 
   if (loading) {
-    return <p>Loading popular terms...</p>;
+    return <p>Loading popular words...</p>;
   }
 
   if (error) {
@@ -55,16 +55,16 @@ const PopularTerms = () => {
 
   return (
     <div className="mt-8">
-      <h2 className="text-xl font-bold mb-2">Top 10 Popular Search Terms (refreshing in {counter}s):</h2>
+      <h2 className="text-xl font-bold mb-2">Top 10 Popular Search Words (refreshing in {counter}s):</h2>
       <ul className="list-decimal list-inside">
-        {popularTerms.length === 0 ? (
-          <li>No popular terms found</li>
+        {popularWords.length === 0 ? (
+          <li>No popular words found</li>
         ) : (
-          popularTerms.map((term, index) => <li key={index}>{term}</li>)
+          popularWords.map((word, index) => <li key={index}>{word}</li>)
         )}
       </ul>
     </div>
   );
 };
 
-export default PopularTerms;
+export default PopularWords;
