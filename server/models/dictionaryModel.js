@@ -20,17 +20,28 @@ export const getDefinitions = async (searchWord) => {
   }
 };
 
-export const addPopularWord = (searchWord) => {
-  if (popularWords.has(searchWord)) {
-    popularWords.set(searchWord, popularTerms.get(searchWord) + 1);
-  } else {
-    popularWords.set(searchWord, 1);
+export const addPopularWord = async (searchWord) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM popular_words WHERE word = ?", [searchWord]);
+    if (rows.length > 0) {
+      await db.query("UPDATE popular_words SET count = count + 1, last_searched = CURRENT_TIMESTAMP WHERE word = ?", [
+        searchWord,
+      ]);
+    } else {
+      await db.query("INSERT INTO popular_words (word, count) VALUES (?, 1)", [searchWord]);
+    }
+  } catch (error) {
+    console.error("Error updating popular words:", error);
+    throw error;
   }
 };
 
-export const getPopularDictionary = () => {
-  return Array.from(popularWords.entries())
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 10)
-    .map(([word]) => word);
+export const getPopularDictionary = async () => {
+  try {
+    const [rows] = await db.query("SELECT word FROM popular_words ORDER BY count DESC, last_searched DESC LIMIT 10");
+    return rows.map((row) => row.word);
+  } catch (error) {
+    console.error("Error fetching popular words:", error);
+    throw error;
+  }
 };
