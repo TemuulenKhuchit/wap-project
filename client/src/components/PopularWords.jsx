@@ -19,7 +19,8 @@ const PopularWords = () => {
           return response.json();
         })
         .then((data) => {
-          setPopularWords(data);
+          console.log("Popular words fetched:", data);
+          setPopularWords(Array.isArray(data) ? data : []);
           setLoading(false);
         })
         .catch((err) => {

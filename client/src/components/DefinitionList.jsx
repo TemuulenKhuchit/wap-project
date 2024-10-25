@@ -18,7 +18,7 @@ const DefinitionList = ({ searchWord }) => {
           return response.json();
         })
         .then((data) => {
-          setDefinitions(data);
+          setDefinitions(Array.isArray(data) ? data : []);
           setLoading(false);
         })
         .catch((err) => {
