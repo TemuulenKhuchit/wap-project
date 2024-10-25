@@ -10,7 +10,7 @@ const DefinitionList = ({ searchWord }) => {
       setLoading(true);
       setError(null);
 
-      fetch(`http://localhost:5000/api/search?word=${searchWord}`)
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/search?word=${searchWord}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Word not found!");

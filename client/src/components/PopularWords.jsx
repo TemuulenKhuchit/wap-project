@@ -11,7 +11,7 @@ const PopularWords = () => {
       setLoading(true);
       setError(null);
 
-      fetch("http://localhost:5000/api/popular")
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/api/popular`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Failed to fetch popular words!");
