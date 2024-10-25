@@ -1,9 +1,23 @@
-import DB from "../englishdictionary.json" assert { type: "json" };
+import mysql from "mysql2/promise";
+
+const db = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "Temuulen123$",
+  database: "entries",
+  port: 3306,
+});
 
 let popularWords = new Map();
 
-export const getDefinitions = (searchWord) => {
-  return DB.entries.filter((row) => row.word && row.word.toLowerCase() === searchWord.toLowerCase());
+export const getDefinitions = async (searchWord) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM entries WHERE word = ?", [searchWord.toLowerCase()]);
+    return rows;
+  } catch (error) {
+    console.error("Error fetching definitions:", error);
+    throw error;
+  }
 };
 
 export const addPopularWord = (searchWord) => {
