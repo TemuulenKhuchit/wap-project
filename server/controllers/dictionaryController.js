@@ -6,9 +6,6 @@ export const searchDictionary = async (req, res) => {
   if (searchWord) {
     try {
       const results = await getDefinitions(searchWord);
-      console.log("results.length: ", results.length);
-      console.log("Results: ", results);
-
       if (results.length > 0) {
         await addPopularWord(searchWord);
         res.json(results);

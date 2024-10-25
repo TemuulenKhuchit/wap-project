@@ -52,7 +52,7 @@ export const getPopularDictionary = async () => {
   try {
     connection = await db.getConnection();
     const [rows] = await connection.query(
-      "SELECT word FROM popular_words ORDER BY count DESC, last_searched DESC LIMIT 10"
+      "SELECT CONCAT(word, ' (', count, ')') as word FROM popular_words ORDER BY count DESC, last_searched DESC LIMIT 10"
     );
     return rows.map((row) => row.word);
   } catch (error) {
