@@ -1,7 +1,7 @@
 import { getDefinitions, addPopularWord, getPopularDictionary } from "../models/dictionaryModel.js";
 
 export const searchDictionary = (req, res) => {
-  const searchWord = req.query.searchWord;
+  const searchWord = req.query.term;
 
   if (searchWord) {
     const results = getDefinitions(searchWord);
